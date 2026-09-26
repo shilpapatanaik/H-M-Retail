@@ -1,6 +1,7 @@
 package com.hm.product.controller;
 
 import com.hm.product.model.Product;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -56,17 +57,25 @@ public class ProductController {
     );
 
 
-    @GetMapping
-    public List<Product> getProducts() {
-        return products;
-    }
+   @GetMapping
+public List<Product> getProducts() {
+    return products;
+}
 
+@GetMapping("/{id}")
+public Product getProductById(@PathVariable Long id) {
 
-    @PostMapping
-    public Product addProduct(@RequestBody Product product) {
+    return products.stream()
+            .filter(product -> product.getId().equals(id))
+            .findFirst()
+            .orElse(null);
+}
 
-        products.add(product);
+@PostMapping
+public Product addProduct(@RequestBody Product product) {
 
-        return product;
-    }
+    products.add(product);
+
+    return product;
+  }
 }
