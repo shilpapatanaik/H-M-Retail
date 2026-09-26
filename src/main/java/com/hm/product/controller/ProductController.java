@@ -7,16 +7,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 @RequestMapping("/products")
 public class ProductController {
 
-    @GetMapping
-    public List<Product> getProducts() {
-
-        return List.of(
+    private static final List<Product> products = new ArrayList<>(
+        List.of(
 
             new Product(
                 101L,
@@ -53,10 +52,21 @@ public class ProductController {
                 15,
                 "Fashion necklace"
             )
-        );
+        )
+    );
+
+
+    @GetMapping
+    public List<Product> getProducts() {
+        return products;
     }
+
+
     @PostMapping
     public Product addProduct(@RequestBody Product product) {
+
+        products.add(product);
+
         return product;
-    }   
+    }
 }
