@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,14 +65,17 @@ public List<Product> getProducts() {
 }
 
 @GetMapping("/{id}")
-public Product getProductById(@PathVariable Long id) {
+public ResponseEntity<Product> getProductById(@PathVariable Long id) {
 
-    return products.stream()
-            .filter(product -> product.getId().equals(id))
-            .findFirst()
-            .orElse(null);
+    for (Product product : products) {
+
+        if (product.getId().equals(id)) {
+            return ResponseEntity.ok(product);
+        }
+    }
+
+    return ResponseEntity.status(404).build();
 }
-
 @PostMapping
 public Product addProduct(@RequestBody Product product) {
 
