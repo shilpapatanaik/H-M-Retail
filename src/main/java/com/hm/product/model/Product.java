@@ -1,21 +1,31 @@
 package com.hm.product.model;
 
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotBlank;
+
+@Entity
 public class Product {
 
     // =========================
     // 1. PRODUCT DATA / FIELDS
     // =========================
 
+    @Id
     private Long id;
+
+    @NotBlank(message = "Product name is required")
     private String name;
+    @NotBlank(message = "Product category is required")
     private String category;
     private String brand;
-
-    // WRITE PRICE HERE
+    @Positive(message = "Price must be greater than 0")
     private double price;
-
     private String size;
     private String color;
+    @PositiveOrZero(message = "Stock cannot be negative")
     private int stock;
     private String description;
 
@@ -124,5 +134,3 @@ public class Product {
         this.description = description;
     }
 }
-
-
