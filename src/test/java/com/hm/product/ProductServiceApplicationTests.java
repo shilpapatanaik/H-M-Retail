@@ -6,8 +6,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 class ProductServiceApplicationTests {
 
-	@Test
-	void contextLoads() {
-	}
-
+    @Test
+    void applicationStartsSuccessfully() {
+        System.out.println("Product Service application started successfully!");
+    }
 }
