@@ -1,10 +1,9 @@
 package com.hm.product.model;
 
-import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
 
 @Entity
 public class Product {
@@ -18,16 +17,23 @@ public class Product {
 
     @NotBlank(message = "Product name is required")
     private String name;
+
     @NotBlank(message = "Product category is required")
     private String category;
+
     private String brand;
+
     @Positive(message = "Price must be greater than 0")
     private double price;
+
     private String size;
+
     private String color;
-    @PositiveOrZero(message = "Stock cannot be negative")
-    private int stock;
+
     private String description;
+
+    // WOMEN / MEN / KIDS
+    private String section;
 
 
     // =========================
@@ -44,7 +50,7 @@ public class Product {
 
     public Product(Long id, String name, String category, String brand,
                    double price, String size, String color,
-                   int stock, String description) {
+                   String description, String section) {
 
         this.id = id;
         this.name = name;
@@ -53,8 +59,8 @@ public class Product {
         this.price = price;
         this.size = size;
         this.color = color;
-        this.stock = stock;
         this.description = description;
+        this.section = section;
     }
 
 
@@ -70,6 +76,7 @@ public class Product {
         this.id = id;
     }
 
+
     public String getName() {
         return name;
     }
@@ -77,6 +84,7 @@ public class Product {
     public void setName(String name) {
         this.name = name;
     }
+
 
     public String getCategory() {
         return category;
@@ -86,6 +94,7 @@ public class Product {
         this.category = category;
     }
 
+
     public String getBrand() {
         return brand;
     }
@@ -93,6 +102,7 @@ public class Product {
     public void setBrand(String brand) {
         this.brand = brand;
     }
+
 
     public double getPrice() {
         return price;
@@ -102,6 +112,7 @@ public class Product {
         this.price = price;
     }
 
+
     public String getSize() {
         return size;
     }
@@ -109,6 +120,7 @@ public class Product {
     public void setSize(String size) {
         this.size = size;
     }
+
 
     public String getColor() {
         return color;
@@ -118,13 +130,6 @@ public class Product {
         this.color = color;
     }
 
-    public int getStock() {
-        return stock;
-    }
-
-    public void setStock(int stock) {
-        this.stock = stock;
-    }
 
     public String getDescription() {
         return description;
@@ -132,5 +137,14 @@ public class Product {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+
+    public String getSection() {
+        return section;
+    }
+
+    public void setSection(String section) {
+        this.section = section;
     }
 }
