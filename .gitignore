@@ -33,3 +33,11 @@ dist-ssr
 *.sln
 *.sw?
 target/
+
+# Environment secrets
+.env
+.env.*
+!.env.example
+
+# Nested Java build output
+**/target/
