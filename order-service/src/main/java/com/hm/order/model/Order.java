@@ -1,3 +1,4 @@
+
 package com.hm.order.model;
 
 import jakarta.persistence.Entity;
@@ -23,6 +24,9 @@ public class Order {
     @Positive(message = "Product ID must be greater than 0")
     private Long productId;
 
+    @NotBlank(message = "Size is required")
+    private String size;
+
     @Min(value = 1, message = "Quantity must be at least 1")
     private Integer quantity;
 
@@ -30,9 +34,7 @@ public class Order {
     private Double price;
 
     private Double totalAmount;
-
     private String status;
-
     private String orderDate;
 
     public Order() {
@@ -51,67 +53,30 @@ public class Order {
         this.orderDate = orderDate;
     }
 
-    public Long getId() {
-        return id;
-    }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public String getCustomerName() { return customerName; }
+    public void setCustomerName(String customerName) { this.customerName = customerName; }
 
-    public String getCustomerName() {
-        return customerName;
-    }
+    public Long getProductId() { return productId; }
+    public void setProductId(Long productId) { this.productId = productId; }
 
-    public void setCustomerName(String customerName) {
-        this.customerName = customerName;
-    }
+    public String getSize() { return size; }
+    public void setSize(String size) { this.size = size; }
 
-    public Long getProductId() {
-        return productId;
-    }
+    public Integer getQuantity() { return quantity; }
+    public void setQuantity(Integer quantity) { this.quantity = quantity; }
 
-    public void setProductId(Long productId) {
-        this.productId = productId;
-    }
+    public Double getPrice() { return price; }
+    public void setPrice(Double price) { this.price = price; }
 
-    public Integer getQuantity() {
-        return quantity;
-    }
+    public Double getTotalAmount() { return totalAmount; }
+    public void setTotalAmount(Double totalAmount) { this.totalAmount = totalAmount; }
 
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
-    }
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
 
-    public Double getPrice() {
-        return price;
-    }
-
-    public void setPrice(Double price) {
-        this.price = price;
-    }
-
-    public Double getTotalAmount() {
-        return totalAmount;
-    }
-
-    public void setTotalAmount(Double totalAmount) {
-        this.totalAmount = totalAmount;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getOrderDate() {
-        return orderDate;
-    }
-
-    public void setOrderDate(String orderDate) {
-        this.orderDate = orderDate;
-    }
+    public String getOrderDate() { return orderDate; }
+    public void setOrderDate(String orderDate) { this.orderDate = orderDate; }
 }

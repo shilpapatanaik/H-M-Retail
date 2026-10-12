@@ -19,4 +19,14 @@ public class ProductServiceClient {
                 .retrieve()
                 .body(ProductResponse.class);
     }
+
+    public void deductStock(Long productId, String size, int quantity) {
+        productServiceRestClient.post()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/products/{productId}/sizes/{size}/deduct")
+                        .queryParam("quantity", quantity)
+                        .build(productId, size))
+                .retrieve()
+                .toBodilessEntity();
+    }
 }

@@ -1,3 +1,4 @@
+
 package com.hm.product.model;
 
 import jakarta.persistence.Entity;
@@ -7,10 +8,6 @@ import jakarta.validation.constraints.Positive;
 
 @Entity
 public class Product {
-
-    // =========================
-    // 1. PRODUCT DATA / FIELDS
-    // =========================
 
     @Id
     private Long id;
@@ -35,19 +32,14 @@ public class Product {
     // WOMEN / MEN / KIDS
     private String section;
 
+    // Available inventory quantity
+    private int stock = 10;
 
-    // =========================
-    // 2. DEFAULT CONSTRUCTOR
-    // =========================
-
+    // Default constructor
     public Product() {
     }
 
-
-    // =========================
-    // 3. CONSTRUCTOR
-    // =========================
-
+    // Constructor
     public Product(Long id, String name, String category, String brand,
                    double price, String size, String color,
                    String description, String section) {
@@ -61,13 +53,10 @@ public class Product {
         this.color = color;
         this.description = description;
         this.section = section;
+        this.stock = 10;
     }
 
-
-    // =========================
-    // 4. GETTERS AND SETTERS
-    // =========================
-
+    // Getters and setters
     public Long getId() {
         return id;
     }
@@ -75,7 +64,6 @@ public class Product {
     public void setId(Long id) {
         this.id = id;
     }
-
 
     public String getName() {
         return name;
@@ -85,7 +73,6 @@ public class Product {
         this.name = name;
     }
 
-
     public String getCategory() {
         return category;
     }
@@ -93,7 +80,6 @@ public class Product {
     public void setCategory(String category) {
         this.category = category;
     }
-
 
     public String getBrand() {
         return brand;
@@ -103,7 +89,6 @@ public class Product {
         this.brand = brand;
     }
 
-
     public double getPrice() {
         return price;
     }
@@ -111,7 +96,6 @@ public class Product {
     public void setPrice(double price) {
         this.price = price;
     }
-
 
     public String getSize() {
         return size;
@@ -121,7 +105,6 @@ public class Product {
         this.size = size;
     }
 
-
     public String getColor() {
         return color;
     }
@@ -129,7 +112,6 @@ public class Product {
     public void setColor(String color) {
         this.color = color;
     }
-
 
     public String getDescription() {
         return description;
@@ -139,12 +121,19 @@ public class Product {
         this.description = description;
     }
 
-
     public String getSection() {
         return section;
     }
 
     public void setSection(String section) {
         this.section = section;
+    }
+
+    public int getStock() {
+        return stock;
+    }
+
+    public void setStock(int stock) {
+        this.stock = stock;
     }
 }

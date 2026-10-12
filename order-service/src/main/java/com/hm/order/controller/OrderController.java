@@ -10,15 +10,9 @@ import jakarta.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -57,12 +51,13 @@ public class OrderController {
 
         order.setPrice(product.getPrice());
         order.setTotalAmount(
-                product.getPrice() * order.getQuantity()
-        );
+                product.getPrice() * order.getQuantity());
 
         if (order.getStatus() == null || order.getStatus().isBlank()) {
             order.setStatus("CREATED");
         }
+
+        reserveStock(order);
 
         return orderRepository.save(order);
     }
@@ -75,61 +70,86 @@ public class OrderController {
         Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND,
-                        "Order not found: " + id
-                ));
+                        "Order not found: " + id));
 
         ProductResponse product = fetchProduct(updatedOrder.getProductId());
 
         order.setCustomerName(updatedOrder.getCustomerName());
         order.setProductId(updatedOrder.getProductId());
+        order.setSize(updatedOrder.getSize());
         order.setQuantity(updatedOrder.getQuantity());
         order.setPrice(product.getPrice());
         order.setTotalAmount(
-                product.getPrice() * updatedOrder.getQuantity()
-        );
+                product.getPrice() * updatedOrder.getQuantity());
         order.setStatus(updatedOrder.getStatus());
         order.setOrderDate(updatedOrder.getOrderDate());
 
         return ResponseEntity.ok(orderRepository.save(order));
     }
 
-    private ProductResponse fetchProduct(Long productId) {
-
-        ProductResponse product;
-
+    private void reserveStock(Order order) {
         try {
-            product = productServiceClient.getProductById(productId);
+            productServiceClient.deductStock(
+                    order.getProductId(),
+                    order.getSize(),
+                    order.getQuantity());
+
+        } catch (RestClientResponseException ex) {
+            if (ex.getStatusCode().value() == 409) {
+                throw new ResponseStatusException(
+                        HttpStatus.CONFLICT,
+                        "Insufficient stock for product "
+                                + order.getProductId()
+                                + ", size " + order.getSize());
+            }
+
+            if (ex.getStatusCode().value() == 404) {
+                throw new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Product size was not found");
+            }
+
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_GATEWAY,
+                    "Unable to reserve product stock");
+        } catch (RestClientException ex) {
+            throw new ResponseStatusException(
+                    HttpStatus.SERVICE_UNAVAILABLE,
+                    "Product Service is unavailable");
+        }
+    }
+
+    private ProductResponse fetchProduct(Long productId) {
+        try {
+            ProductResponse product =
+                    productServiceClient.getProductById(productId);
+
+            if (product == null || product.getPrice() == null) {
+                throw new ResponseStatusException(
+                        HttpStatus.BAD_GATEWAY,
+                        "Product Service returned invalid product details");
+            }
+
+            return product;
+
         } catch (org.springframework.web.client.HttpClientErrorException.NotFound ex) {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND,
-                    "Product not found: " + productId
-            );
-        } catch (org.springframework.web.client.RestClientException ex) {
+                    "Product not found: " + productId);
+        } catch (RestClientException ex) {
             throw new ResponseStatusException(
                     HttpStatus.SERVICE_UNAVAILABLE,
-                    "Product Service is unavailable"
-            );
+                    "Product Service is unavailable");
         }
-
-        if (product == null || product.getPrice() == null) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_GATEWAY,
-                    "Product Service returned invalid product details"
-            );
-        }
-
-        return product;
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteOrder(@PathVariable Long id) {
-
         if (!orderRepository.existsById(id)) {
             return ResponseEntity.notFound().build();
         }
 
         orderRepository.deleteById(id);
-
         return ResponseEntity.noContent().build();
     }
 }
