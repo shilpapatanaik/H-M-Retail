@@ -42,6 +42,14 @@ pipeline {
                 bat 'npm run build'
             }
         }
+                
+        stage('SonarQube Code Analysis') {
+            steps {
+                withSonarQubeEnv('sonarqube') {
+                    bat 'mvn -B org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=hm-retail -Dsonar.projectName="H&M Retail"'
+                }
+            }
+        }
     }
 
     post {
