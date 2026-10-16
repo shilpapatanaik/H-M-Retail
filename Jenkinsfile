@@ -43,10 +43,10 @@ pipeline {
             }
         }
                 
-        stage('SonarQube Code Analysis') {
+                    stage('SonarQube Code Analysis') {
             steps {
                 withSonarQubeEnv('sonarqube') {
-                    bat 'mvn -B org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=hm-retail -Dsonar.projectName="H&M Retail"'
+                    bat 'mvn -B org.sonarsource.scanner.maven:sonar-maven-plugin:5.8.0.7211:sonar -Dsonar.projectKey=hm-retail -Dsonar.projectName="H&M Retail" -Dsonar.token=%SONAR_AUTH_TOKEN%'
                 }
             }
         }
